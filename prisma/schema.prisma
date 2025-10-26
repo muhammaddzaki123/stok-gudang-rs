@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Model untuk Autentikasi
+model User {
+  id        String   @id @default(cuid())
+  nama      String?
+  email     String   @unique
+  password  String 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Model untuk Data Barang (Fitur 3)
+model Barang {
+  id         String   @id @default(cuid())
+  kodeBarang String   @unique 
+  namaBarang String 
+  satuan     String 
+  stok       Int      @default(0) 
+  createdAt  DateTime @default(now())
+
+  // Relasi untuk Fitur 4
+  stokMasuk  StokMasuk[]
+  stokKeluar StokKeluar[]
+}
+
+// Model untuk Barang Masuk (Fitur 4)
+model StokMasuk {
+  id         String   @id @default(cuid())
+  jumlah     Int
+  tanggal    DateTime @default(now())
+  barang     Barang   @relation(fields: [barangId], references: [id])
+  barangId   String
+  createdAt  DateTime @default(now())
+}
+
+// Model untuk Barang Keluar (Fitur 4)
+model StokKeluar {
+  id         String   @id @default(cuid())
+  jumlah     Int
+  tanggal    DateTime @default(now())
+  barang     Barang   @relation(fields: [barangId], references: [id])
+  barangId   String
+  createdAt  DateTime @default(now())
+}
