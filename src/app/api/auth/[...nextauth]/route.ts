@@ -1,18 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-import { NextResponse } from "next/server";
+import { authOptions } from "@/lib/auth";
+import NextAuth from "next-auth";
 
-const prisma = new PrismaClient();
+const handler = NextAuth(authOptions);
 
-export async function POST(request: Request) {
-  const { kodeBarang, namaBarang, satuan } = await request.json();
-
-  const newBarang = await prisma.barang.create({
-    data: {
-      kodeBarang,
-      namaBarang,
-      satuan,
-    },
-  });
-
-  return NextResponse.json(newBarang);
-}
+export { handler as GET, handler as POST };
